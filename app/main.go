@@ -33,6 +33,8 @@ func main() {
 
 	if len(file_contents) > 0 {
 		run(string(file_contents))
+	} else {
+		fmt.Println("EOF  null")
 	}
 }
 

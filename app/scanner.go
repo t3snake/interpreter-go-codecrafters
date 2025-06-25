@@ -39,7 +39,7 @@ func scanToken() {
 	case '{':
 		addToken(LEFT_BRACE)
 	case '}':
-		addToken(LEFT_BRACE)
+		addToken(RIGHT_BRACE)
 	case ',':
 		addToken(COMMA)
 	case '.':

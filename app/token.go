@@ -12,5 +12,9 @@ type Token struct {
 }
 
 func stringifyToken(token Token) string {
-	return fmt.Sprintf("%s %s %s", token.token_type, token.lexeme, token.literal)
+	var literal string
+	if token.literal == nil {
+		literal = "null"
+	}
+	return fmt.Sprintf("%s %s %s", token.token_type, token.lexeme, literal)
 }

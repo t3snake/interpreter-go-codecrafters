@@ -33,8 +33,6 @@ func main() {
 
 	if len(file_contents) > 0 {
 		run(string(file_contents))
-	} else {
-		fmt.Println("EOF  null") // Placeholder, remove this line when implementing the scanner
 	}
 }
 
@@ -49,6 +47,7 @@ func run(source string) {
 		fmt.Println(stringifyToken(token))
 	}
 
+	fmt.Println("EOF  null")
 }
 
 func error(line int, message string) {

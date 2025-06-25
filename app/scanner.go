@@ -64,7 +64,7 @@ func isAtEnd() bool {
 
 func advance() rune {
 	scan_state.current++
-	return rune(source[scan_state.current])
+	return rune(source[scan_state.current-1])
 }
 
 func addToken(token_type TokenType) {

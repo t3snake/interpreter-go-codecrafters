@@ -1,5 +1,9 @@
 package main
 
+import (
+	"fmt"
+)
+
 type ScanState struct {
 	start   int
 	current int
@@ -54,7 +58,7 @@ func scanToken() {
 		addToken(STAR)
 
 	default:
-		error(scan_state.line, "Unexpected character.")
+		error(scan_state.line, fmt.Sprintf("Unexpected character: %s", string(char)))
 	}
 }
 

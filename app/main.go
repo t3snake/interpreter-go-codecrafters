@@ -39,10 +39,6 @@ func main() {
 }
 
 func run(source string) {
-	if had_error {
-		os.Exit(65)
-	}
-
 	tokens := scanTokens(source)
 
 	for _, token := range tokens {
@@ -50,6 +46,10 @@ func run(source string) {
 	}
 
 	fmt.Println("EOF  null")
+
+	if had_error {
+		os.Exit(65)
+	}
 }
 
 func error(line int, message string) {
@@ -57,5 +57,6 @@ func error(line int, message string) {
 }
 
 func report(line int, where string, message string) {
-	fmt.Printf("[line %d] Error%s: %s", line, where, message)
+	fmt.Printf("[line %d] Error%s: %s\n", line, where, message)
+	had_error = true
 }

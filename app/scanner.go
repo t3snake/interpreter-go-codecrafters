@@ -155,7 +155,7 @@ func peekNext() rune {
 	if scan_state.current+1 >= len(source) {
 		return rune(0)
 	}
-	return rune(source[scan_state.current])
+	return rune(source[scan_state.current+1])
 }
 
 func isDigit(char rune) bool {

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 // State of current running scan
@@ -220,6 +221,7 @@ func scanIdentifier() {
 	}
 
 	token := source[scan_state.start:scan_state.current]
+	token = strings.ToUpper(token)
 	keywordMap := getKeywordMap()
 	token_type, ok := keywordMap[token]
 	if ok {

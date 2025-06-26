@@ -153,7 +153,8 @@ func scanStringLiteral() {
 			return
 		} else if peek() == '"' {
 			// without quotes
-			addTokenWithLiteral(STRING, source[scan_state.start+1:scan_state.current])
+			advance()
+			addTokenWithLiteral(STRING, source[scan_state.start+1:scan_state.current-1])
 			return
 		} else if peek() == '\n' {
 			scan_state.line++

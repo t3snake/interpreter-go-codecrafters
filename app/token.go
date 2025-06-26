@@ -18,8 +18,8 @@ func stringifyToken(token Token) string {
 		literal = "null"
 	} else if value, ok := token.literal.(string); ok {
 		literal = value
-	} else if value, ok := token.literal.(int); ok {
-		literal = strconv.Itoa(value)
+	} else if value, ok := token.literal.(float32); ok {
+		literal = strconv.FormatFloat(float64(value), 'f', -1, 32)
 	}
 	return fmt.Sprintf("%s %s %s", token.token_type, token.lexeme, literal)
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 )
 
 // State of current running scan
@@ -146,14 +147,25 @@ func peek() rune {
 	return rune(source[scan_state.current])
 }
 
+func peekNext() rune {
+	if scan_state.current+1 >= len(source) {
+		return rune(0)
+	}
+	return rune(source[scan_state.current])
+}
+
+func isDigit(char rune) bool {
+	return char >= '0' && char <= '9'
+}
+
 func scanStringLiteral() {
 	for {
 		if isAtEnd() {
 			error(scan_state.line, "Unterminated string.")
 			return
 		} else if peek() == '"' {
-			// without quotes
 			advance()
+			// without quotes
 			addTokenWithLiteral(STRING, source[scan_state.start+1:scan_state.current-1])
 			return
 		} else if peek() == '\n' {
@@ -162,6 +174,25 @@ func scanStringLiteral() {
 
 		advance()
 	}
+}
+
+func scanNumberLiteral() {
+	for isDigit(peek()) {
+		advance()
+	}
+
+	if isDigit(peekNext()) && match('.') {
+		for isDigit(peek()) {
+			advance()
+		}
+	}
+
+	num, err := strconv.ParseFloat(source[scan_state.start:scan_state.current], 32)
+	if err != nil {
+		error(scan_state.line, err.Error())
+	}
+
+	addTokenWithLiteral(NUMBER, num)
 }
 
 func addToken(token_type TokenType) {

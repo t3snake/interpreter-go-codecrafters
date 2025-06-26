@@ -104,7 +104,12 @@ func match(next_char rune) bool {
 	if scan_state.current >= len(source) {
 		return false
 	}
-	return rune(source[scan_state.current]) == next_char
+	if rune(source[scan_state.current]) != next_char {
+		return false
+	}
+
+	scan_state.current++
+	return true
 }
 
 func addToken(token_type TokenType) {

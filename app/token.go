@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 type Token struct {
@@ -20,6 +21,9 @@ func stringifyToken(token Token) string {
 		literal = value
 	} else if value, ok := token.literal.(float64); ok {
 		literal = strconv.FormatFloat(value, 'f', -1, 64)
+		if !strings.ContainsAny(literal, ".") {
+			literal += ".0"
+		}
 	}
 	return fmt.Sprintf("%s %s %s", token.token_type, token.lexeme, literal)
 }

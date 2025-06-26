@@ -191,7 +191,7 @@ func scanNumberLiteral() {
 		}
 	}
 
-	num, err := strconv.ParseFloat(source[scan_state.start:scan_state.current], 32)
+	num, err := strconv.ParseFloat(source[scan_state.start:scan_state.current], 64)
 	if err != nil {
 		error(scan_state.line, err.Error())
 	}

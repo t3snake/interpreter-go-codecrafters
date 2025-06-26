@@ -113,6 +113,8 @@ func scanToken() {
 	default:
 		if isDigit(char) {
 			scanNumberLiteral()
+		} else if isAlpha(char) {
+			scanIdentifier()
 		} else {
 			error(scan_state.line, fmt.Sprintf("Unexpected character: %s", string(char)))
 		}
@@ -151,6 +153,7 @@ func peek() rune {
 	return rune(source[scan_state.current])
 }
 
+// Peek the next rune after the rune pointed by current pointer
 func peekNext() rune {
 	if scan_state.current+1 >= len(source) {
 		return rune(0)
@@ -158,10 +161,21 @@ func peekNext() rune {
 	return rune(source[scan_state.current+1])
 }
 
+// Return true for rune 0 to 9
 func isDigit(char rune) bool {
 	return char >= '0' && char <= '9'
 }
 
+// Return true for a-z, A-Z or _
+func isAlpha(char rune) bool {
+	return (char >= 'a' && char <= 'z') || (char >= 'A' && char <= 'Z') || (char == '_')
+}
+
+func isAlphaNumeric(char rune) bool {
+	return isAlpha(char) || isDigit(char)
+}
+
+// Scan string as literal and add to tokens
 func scanStringLiteral() {
 	for {
 		if isAtEnd() {
@@ -180,6 +194,7 @@ func scanStringLiteral() {
 	}
 }
 
+// Scan numbers including decimals as literal and add to tokens
 func scanNumberLiteral() {
 	for isDigit(peek()) {
 		advance()
@@ -197,6 +212,23 @@ func scanNumberLiteral() {
 	}
 
 	addTokenWithLiteral(NUMBER, num)
+}
+
+func scanIdentifier() {
+	for isAlphaNumeric(peek()) {
+		advance()
+	}
+
+	token := source[scan_state.start:scan_state.current]
+	keywordMap := getKeywordMap()
+	token_type, ok := keywordMap[token]
+	if ok {
+		// if reserved keyword
+		addToken(token_type)
+	} else {
+		addToken(IDENTIFIER)
+	}
+
 }
 
 func addToken(token_type TokenType) {

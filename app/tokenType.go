@@ -51,3 +51,26 @@ const (
 
 	EOF TokenType = "EOF"
 )
+
+func getKeywordMap() map[string]TokenType {
+	result := make(map[string]TokenType, 0)
+
+	result["AND"] = AND
+	result["CLASS"] = CLASS
+	result["ELSE"] = ELSE
+	result["FALSE"] = FALSE
+	result["FUN"] = FUN
+	result["FOR"] = FOR
+	result["IF"] = IF
+	result["NIL"] = NIL
+	result["OR"] = OR
+	result["PRINT"] = PRINT
+	result["RETURN"] = RETURN
+	result["SUPER"] = SUPER
+	result["THIS"] = THIS
+	result["TRUE"] = TRUE
+	result["VAR"] = VAR
+	result["WHILE"] = WHILE
+
+	return result
+}

@@ -55,22 +55,22 @@ const (
 func getKeywordMap() map[string]TokenType {
 	result := make(map[string]TokenType, 0)
 
-	result["AND"] = AND
-	result["CLASS"] = CLASS
-	result["ELSE"] = ELSE
-	result["FALSE"] = FALSE
-	result["FUN"] = FUN
-	result["FOR"] = FOR
-	result["IF"] = IF
-	result["NIL"] = NIL
-	result["OR"] = OR
-	result["PRINT"] = PRINT
-	result["RETURN"] = RETURN
-	result["SUPER"] = SUPER
-	result["THIS"] = THIS
-	result["TRUE"] = TRUE
-	result["VAR"] = VAR
-	result["WHILE"] = WHILE
+	result["and"] = AND
+	result["class"] = CLASS
+	result["else"] = ELSE
+	result["false"] = FALSE
+	result["fun"] = FUN
+	result["for"] = FOR
+	result["if"] = IF
+	result["nil"] = NIL
+	result["or"] = OR
+	result["print"] = PRINT
+	result["return"] = RETURN
+	result["super"] = SUPER
+	result["this"] = THIS
+	result["true"] = TRUE
+	result["var"] = VAR
+	result["while"] = WHILE
 
 	return result
 }

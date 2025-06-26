@@ -101,6 +101,9 @@ func advance() rune {
 
 // Return true if next character during scan is equal to the given rune
 func match(next_char rune) bool {
+	if scan_state.current+1 >= len(source) {
+		return false
+	}
 	return rune(source[scan_state.current+1]) == next_char
 }
 

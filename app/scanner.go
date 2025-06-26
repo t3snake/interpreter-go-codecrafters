@@ -57,18 +57,51 @@ func scanToken() {
 	case '*':
 		addToken(STAR)
 
+	// Characters that can be single char or resolve multiple
+	case '!':
+		if match('=') {
+			addToken(BANG_EQUAL)
+		} else {
+			addToken(BANG)
+		}
+	case '=':
+		if match('=') {
+			addToken(EQUAL_EQUAL)
+		} else {
+			addToken(EQUAL)
+		}
+	case '<':
+		if match('=') {
+			addToken(LESS_EQUAL)
+		} else {
+			addToken(LESS)
+		}
+	case '>':
+		if match('=') {
+			addToken(GREATER_EQUAL)
+		} else {
+			addToken(GREATER)
+		}
+
 	default:
 		error(scan_state.line, fmt.Sprintf("Unexpected character: %s", string(char)))
 	}
 }
 
+// Return true if current pointer is at end
 func isAtEnd() bool {
 	return scan_state.current >= len(source)
 }
 
+// Return current rune and increment current pointer
 func advance() rune {
 	scan_state.current++
 	return rune(source[scan_state.current-1])
+}
+
+// Return true if next character during scan is equal to the given rune
+func match(next_char rune) bool {
+	return rune(source[scan_state.current+1]) == next_char
 }
 
 func addToken(token_type TokenType) {

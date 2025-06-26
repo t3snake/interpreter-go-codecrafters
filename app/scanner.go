@@ -4,10 +4,11 @@ import (
 	"fmt"
 )
 
+// State of current running scan
 type ScanState struct {
-	start   int
-	current int
-	line    int
+	start   int // Start of token being scanned
+	current int // Current unconsumed character
+	line    int // Current line being scanned
 }
 
 // globals
@@ -15,6 +16,7 @@ var source string
 var scan_state ScanState
 var tokens []Token
 
+// Scan and return list of tokens given source file
 func scanTokens(input_source string) []Token {
 	scan_state = ScanState{
 		start:   0,
@@ -32,6 +34,7 @@ func scanTokens(input_source string) []Token {
 	return tokens
 }
 
+// Scan single token and adjust scan_state pointers
 func scanToken() {
 	char := advance()
 
@@ -91,6 +94,17 @@ func scanToken() {
 		} else {
 			addToken(SLASH)
 		}
+
+	// Whitespace handling
+	case ' ':
+		// Ignore
+	case '\r':
+		// Ignore
+	case '\t':
+		// Ignore
+	case '\n':
+		scan_state.line++
+		// Ignore whitespace
 
 	default:
 		error(scan_state.line, fmt.Sprintf("Unexpected character: %s", string(char)))

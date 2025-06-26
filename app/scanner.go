@@ -82,6 +82,15 @@ func scanToken() {
 		} else {
 			addToken(GREATER)
 		}
+	case '/':
+		if match('/') {
+			// comment case
+			for !isAtEnd() && peek() != '\n' {
+				advance()
+			}
+		} else {
+			addToken(SLASH)
+		}
 
 	default:
 		error(scan_state.line, fmt.Sprintf("Unexpected character: %s", string(char)))
@@ -99,7 +108,7 @@ func advance() rune {
 	return rune(source[scan_state.current-1])
 }
 
-// Return true if character at current pointer during scan is equal to the given rune
+// Return true and increment pointer if character at current pointer during scan is equal to the given rune
 func match(next_char rune) bool {
 	if scan_state.current >= len(source) {
 		return false
@@ -110,6 +119,14 @@ func match(next_char rune) bool {
 
 	scan_state.current++
 	return true
+}
+
+// Peek the current pointer without moving the pointer
+func peek() rune {
+	if isAtEnd() { // fallback, should not reach here
+		return rune(0)
+	}
+	return rune(source[scan_state.current])
 }
 
 func addToken(token_type TokenType) {

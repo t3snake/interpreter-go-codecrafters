@@ -150,9 +150,11 @@ func scanStringLiteral() {
 	for {
 		if isAtEnd() {
 			error(scan_state.line, "Unterminated string.")
+			return
 		} else if peek() == '"' {
 			// without quotes
 			addTokenWithLiteral(STRING, source[scan_state.start+1:scan_state.current])
+			return
 		} else if peek() == '\n' {
 			scan_state.line++
 		}

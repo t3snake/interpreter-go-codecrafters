@@ -106,6 +106,9 @@ func scanToken() {
 		scan_state.line++
 		// Ignore whitespace
 
+	// string literal
+	case '"':
+		scanStringLiteral()
 	default:
 		error(scan_state.line, fmt.Sprintf("Unexpected character: %s", string(char)))
 	}
@@ -141,6 +144,21 @@ func peek() rune {
 		return rune(0)
 	}
 	return rune(source[scan_state.current])
+}
+
+func scanStringLiteral() {
+	for {
+		if isAtEnd() {
+			error(scan_state.line, "Unterminated string.")
+		} else if peek() == '"' {
+			// without quotes
+			addTokenWithLiteral(STRING, source[scan_state.start+1:scan_state.current])
+		} else if peek() == '\n' {
+			scan_state.line++
+		}
+
+		advance()
+	}
 }
 
 func addToken(token_type TokenType) {

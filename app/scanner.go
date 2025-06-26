@@ -111,7 +111,11 @@ func scanToken() {
 	case '"':
 		scanStringLiteral()
 	default:
-		error(scan_state.line, fmt.Sprintf("Unexpected character: %s", string(char)))
+		if isDigit(char) {
+			scanNumberLiteral()
+		} else {
+			error(scan_state.line, fmt.Sprintf("Unexpected character: %s", string(char)))
+		}
 	}
 }
 

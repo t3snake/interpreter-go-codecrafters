@@ -99,12 +99,12 @@ func advance() rune {
 	return rune(source[scan_state.current-1])
 }
 
-// Return true if next character during scan is equal to the given rune
+// Return true if character at current pointer during scan is equal to the given rune
 func match(next_char rune) bool {
-	if scan_state.current+1 >= len(source) {
+	if scan_state.current >= len(source) {
 		return false
 	}
-	return rune(source[scan_state.current+1]) == next_char
+	return rune(source[scan_state.current]) == next_char
 }
 
 func addToken(token_type TokenType) {

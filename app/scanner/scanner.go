@@ -247,6 +247,10 @@ func addToken(token_type TokenType) {
 func addTokenWithLiteral(token_type TokenType, literal any) {
 	current_text := source[scan_state.start:scan_state.current]
 
+	if token_type == EOF {
+		current_text = ""
+	}
+
 	tokens = append(tokens, Token{
 		Type:    token_type,
 		Lexeme:  current_text,

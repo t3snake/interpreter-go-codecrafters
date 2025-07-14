@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/codecrafters-io/interpreter-starter-go/app/loxerrors"
+	//lint:ignore ST1001 I dont care
 	. "github.com/codecrafters-io/interpreter-starter-go/app/token"
 )
 
@@ -35,6 +36,7 @@ func ScanTokens(input_source string) []Token {
 		scan_state.start = scan_state.current
 		scanToken()
 	}
+	addToken(EOF)
 	return tokens
 }
 

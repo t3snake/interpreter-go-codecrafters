@@ -28,12 +28,12 @@ func previous() Token {
 	return global_tokens[current_token-1]
 }
 
-func match(Types ...TokenType) bool {
-	for _, Type := range Types {
+func match(types ...TokenType) bool {
+	for _, cur_type := range types {
 		if peek().Type == EOF {
 			break
 		}
-		if peek().Type == Type {
+		if peek().Type == cur_type {
 			advance()
 			return true
 		}
@@ -42,8 +42,8 @@ func match(Types ...TokenType) bool {
 	return false
 }
 
-func consume(Type TokenType, message string) (Token, error) {
-	if Type != EOF && peek().Type == Type {
+func consume(token_type TokenType, message string) (Token, error) {
+	if token_type != EOF && peek().Type == token_type {
 		return advance(), nil
 	}
 

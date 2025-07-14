@@ -58,8 +58,6 @@ func run(command, source string) {
 			fmt.Println(token.StringifyToken(token_))
 		}
 
-		fmt.Println("EOF  null")
-
 		return // early return if only to tokenize
 	}
 

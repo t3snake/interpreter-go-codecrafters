@@ -1,8 +1,11 @@
-package main
+package scanner
 
 import (
 	"fmt"
 	"strconv"
+
+	"github.com/codecrafters-io/interpreter-starter-go/app/loxerrors"
+	. "github.com/codecrafters-io/interpreter-starter-go/app/token"
 )
 
 // State of current running scan
@@ -18,7 +21,7 @@ var scan_state ScanState
 var tokens []Token
 
 // Scan and return list of tokens given source file
-func scanTokens(input_source string) []Token {
+func ScanTokens(input_source string) []Token {
 	scan_state = ScanState{
 		start:   0,
 		current: 0,
@@ -61,7 +64,7 @@ func scanToken() {
 	case '*':
 		addToken(STAR)
 
-	// Characters that can be single char or resolve multiple
+	// Characters that can be single char or resolve to multiple
 	case '!':
 		if match('=') {
 			addToken(BANG_EQUAL)
@@ -111,12 +114,16 @@ func scanToken() {
 	case '"':
 		scanStringLiteral()
 	default:
+		// num and identifier literal handling here since not suited for switch case
 		if isDigit(char) {
 			scanNumberLiteral()
 		} else if isAlpha(char) {
 			scanIdentifier()
 		} else {
-			error(scan_state.line, fmt.Sprintf("Unexpected character: %s", string(char)))
+			loxerrors.Scanner_error(
+				scan_state.line,
+				fmt.Sprintf("Unexpected character: %s", string(char)),
+			)
 		}
 	}
 }
@@ -179,7 +186,7 @@ func isAlphaNumeric(char rune) bool {
 func scanStringLiteral() {
 	for {
 		if isAtEnd() {
-			error(scan_state.line, "Unterminated string.")
+			loxerrors.Scanner_error(scan_state.line, "Unterminated string.")
 			return
 		} else if peek() == '"' {
 			advance()
@@ -208,7 +215,7 @@ func scanNumberLiteral() {
 
 	num, err := strconv.ParseFloat(source[scan_state.start:scan_state.current], 64)
 	if err != nil {
-		error(scan_state.line, err.Error())
+		loxerrors.Scanner_error(scan_state.line, err.Error())
 	}
 
 	addTokenWithLiteral(NUMBER, num)
@@ -220,7 +227,7 @@ func scanIdentifier() {
 	}
 
 	token := source[scan_state.start:scan_state.current]
-	keywordMap := getKeywordMap()
+	keywordMap := GetKeywordMap()
 	token_type, ok := keywordMap[token]
 	if ok {
 		// if reserved keyword
@@ -239,9 +246,9 @@ func addTokenWithLiteral(token_type TokenType, literal any) {
 	current_text := source[scan_state.start:scan_state.current]
 
 	tokens = append(tokens, Token{
-		token_type: token_type,
-		lexeme:     current_text,
-		literal:    literal,
-		line:       scan_state.line,
+		Type:    token_type,
+		Lexeme:  current_text,
+		Literal: literal,
+		Line:    scan_state.line,
 	})
 }

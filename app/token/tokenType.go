@@ -1,4 +1,4 @@
-package main
+package token
 
 type TokenType string
 
@@ -52,7 +52,7 @@ const (
 	EOF TokenType = "EOF"
 )
 
-func getKeywordMap() map[string]TokenType {
+func GetKeywordMap() map[string]TokenType {
 	result := make(map[string]TokenType, 0)
 
 	result["and"] = AND

@@ -58,11 +58,11 @@ func run(command, source string) {
 			fmt.Println(token.StringifyToken(token_))
 		}
 
-		return // early return if only to tokenize
-	}
+		if *had_error {
+			os.Exit(65)
+		}
 
-	if *had_error {
-		os.Exit(65)
+		return // early return if only to tokenize
 	}
 
 	ast, _ := parser.Parse(tokens)

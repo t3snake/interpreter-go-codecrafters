@@ -50,8 +50,7 @@ func main() {
 }
 
 func run(command, source string) {
-	had_error := false
-	loxerrors.Had_error = &had_error
+	had_error := loxerrors.GetErrorState()
 
 	tokens := scanner.ScanTokens(source)
 	if command == "tokenize" {
@@ -62,13 +61,13 @@ func run(command, source string) {
 		return // early return if only to tokenize
 	}
 
-	if had_error {
+	if *had_error {
 		os.Exit(65)
 	}
 
 	ast, _ := parser.Parse(tokens)
 
-	if had_error {
+	if *had_error {
 		os.Exit(65)
 	}
 

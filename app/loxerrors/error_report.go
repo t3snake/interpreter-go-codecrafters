@@ -3,12 +3,26 @@ package loxerrors
 import (
 	"fmt"
 	"os"
+	"sync"
 
 	//lint:ignore ST1001 I dont care
 	. "github.com/codecrafters-io/interpreter-starter-go/app/token"
 )
 
-var Had_error *bool
+type Singleton struct {
+	had_error bool
+}
+
+var instance *Singleton
+var once sync.Once
+
+func GetErrorState() *bool {
+	once.Do(func() {
+		instance = &Singleton{had_error: false}
+	})
+
+	return &instance.had_error
+}
 
 func Scanner_error(line int, message string) {
 	report(line, "", message)
@@ -16,7 +30,7 @@ func Scanner_error(line int, message string) {
 
 func report(line int, where string, message string) {
 	fmt.Fprintf(os.Stderr, "[line %d] Error%s: %s\n", line, where, message)
-	*Had_error = true
+	instance.had_error = true
 }
 
 func Parser_error(token Token, message string) {

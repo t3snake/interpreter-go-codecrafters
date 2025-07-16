@@ -137,13 +137,16 @@ func factor() (*AstNode, error) {
 
 func unary() (*AstNode, error) {
 	if match(BANG, MINUS) {
+		// further unary calls will move pointer so save the bang or minus operator
+		operator := previous()
+
 		child, err := unary()
 		if err != nil {
 			return nil, err
 		}
 
 		expr := &AstNode{
-			Representation: previous(),
+			Representation: operator,
 			Type:           UNARY,
 			Children:       []*AstNode{child},
 		}

@@ -12,10 +12,12 @@ import (
 var global_tokens []Token
 var current_token int
 
+// Return token at ptr
 func peek() Token {
 	return global_tokens[current_token]
 }
 
+// Return token at ptr and move ptr ahead
 func advance() Token {
 	if global_tokens[current_token].Type != EOF {
 		current_token++
@@ -23,10 +25,12 @@ func advance() Token {
 	return previous()
 }
 
+// Returns token pointed by ptr - 1
 func previous() Token {
 	return global_tokens[current_token-1]
 }
 
+// Return true and advance ptr if it matches any of the token types given in the arguments.
 func match(types ...TokenType) bool {
 	for _, cur_type := range types {
 		if peek().Type == EOF {

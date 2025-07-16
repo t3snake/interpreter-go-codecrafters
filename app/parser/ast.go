@@ -178,7 +178,7 @@ func primary() (*AstNode, error) {
 		}, nil
 	}
 
-	if match(IDENTIFIER) {
+	if match(IDENTIFIER) || match(NUMBER) || match(STRING) {
 		return &AstNode{
 			Representation: previous().Literal,
 			Type:           TERMINAL,

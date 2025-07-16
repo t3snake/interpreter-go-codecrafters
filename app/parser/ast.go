@@ -51,13 +51,16 @@ func equality() (*AstNode, error) {
 	}
 
 	for match(BANG_EQUAL, EQUAL_EQUAL) {
+		// further recursion calls will move pointer so save operator
+		operator := previous()
+
 		right, err := comparison()
 		if err != nil {
 			return nil, err
 		}
 
 		expr = &AstNode{
-			Representation: previous(),
+			Representation: operator,
 			Type:           BINARY,
 			Children:       []*AstNode{expr, right},
 		}
@@ -74,13 +77,16 @@ func comparison() (*AstNode, error) {
 	}
 
 	for match(LESS, LESS_EQUAL, GREATER, GREATER_EQUAL) {
+		// further calls will move pointer so save the bang or minus operator
+		operator := previous()
+
 		right, err := term()
 		if err != nil {
 			return nil, err
 		}
 
 		expr = &AstNode{
-			Representation: previous(),
+			Representation: operator,
 			Type:           BINARY,
 			Children:       []*AstNode{expr, right},
 		}
@@ -97,13 +103,16 @@ func term() (*AstNode, error) {
 	}
 
 	for match(MINUS, PLUS) {
+		// further recursion calls will move pointer so save operator
+		operator := previous()
+
 		right, err := factor()
 		if err != nil {
 			return nil, err
 		}
 
 		expr = &AstNode{
-			Representation: previous(),
+			Representation: operator,
 			Type:           BINARY,
 			Children:       []*AstNode{expr, right},
 		}
@@ -120,13 +129,16 @@ func factor() (*AstNode, error) {
 	}
 
 	for match(STAR, SLASH) {
+		// further recursion calls will move pointer so save operator
+		operator := previous()
+
 		right, err := unary()
 		if err != nil {
 			return nil, err
 		}
 
 		expr = &AstNode{
-			Representation: previous(),
+			Representation: operator,
 			Type:           BINARY,
 			Children:       []*AstNode{expr, right},
 		}

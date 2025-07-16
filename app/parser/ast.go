@@ -11,11 +11,12 @@ import (
 type NodeType string
 
 const (
-	BINARY   NodeType = "binary"
-	UNARY    NodeType = "unary"
-	TERMINAL NodeType = "terminal"
-	LITERAL  NodeType = "literal"
-	GROUP    NodeType = "group"
+	BINARY     NodeType = "binary"
+	UNARY      NodeType = "unary"
+	TERMINAL   NodeType = "terminal"
+	STRINGNODE NodeType = "string"
+	NUMBERNODE NodeType = "number"
+	GROUP      NodeType = "group"
 )
 
 // Abstract Syntax Tree Node
@@ -178,10 +179,26 @@ func primary() (*AstNode, error) {
 		}, nil
 	}
 
-	if match(IDENTIFIER) || match(NUMBER) || match(STRING) {
+	if match(IDENTIFIER) {
 		return &AstNode{
 			Representation: previous().Literal,
 			Type:           TERMINAL,
+			Children:       nil,
+		}, nil
+	}
+
+	if match(STRING) {
+		return &AstNode{
+			Representation: previous().Literal,
+			Type:           STRINGNODE,
+			Children:       nil,
+		}, nil
+	}
+
+	if match(NUMBER) {
+		return &AstNode{
+			Representation: previous().Literal,
+			Type:           NUMBERNODE,
 			Children:       nil,
 		}, nil
 	}

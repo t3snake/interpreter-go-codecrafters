@@ -2,6 +2,7 @@ package parser
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/codecrafters-io/interpreter-starter-go/app/loxerrors"
@@ -129,12 +130,19 @@ func AstPrinter(tree *AstNode) string {
 			fmt.Println("Wrong type: Not Token when TERMINAL")
 		}
 		builder.WriteString(val.Lexeme)
-	case LITERAL:
+	case STRINGNODE:
 		val, ok := tree.Representation.(string)
 		if !ok {
-			fmt.Println("Wrong type: Not string when LITERAL")
+			fmt.Println("Wrong type: Not string when STRINGNODE")
 		}
 		builder.WriteString(val)
+
+	case NUMBERNODE:
+		val, ok := tree.Representation.(float64)
+		if !ok {
+			fmt.Println("Wrong type: Not float64 when NUMBERNODE")
+		}
+		builder.WriteString(strconv.FormatFloat(val, 'f', -1, 64))
 
 	case GROUP:
 		builder.WriteString("(")

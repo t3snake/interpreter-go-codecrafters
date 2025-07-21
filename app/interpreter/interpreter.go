@@ -2,6 +2,7 @@ package interpreter
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/codecrafters-io/interpreter-starter-go/app/parser"
 
@@ -49,7 +50,9 @@ func PrintEvaluation(result any) string {
 			return "false"
 		}
 	case float64:
-		return GetLoxNumberAsString(res)
+		return strconv.FormatFloat(res, 'f', -1, 64)
+	case string:
+		return res
 	default:
 		return "error: unknown evaluation"
 	}

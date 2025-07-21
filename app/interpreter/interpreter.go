@@ -103,15 +103,16 @@ func EvaluateAst(node *parser.AstNode) (any, error) {
 				}
 
 				return left_val + right_val, nil
+
 			case LESS_EQUAL:
-				left_val, right_val, err := assertBinaryFloats(left, right, "not float value for MINUS Binary node")
+				left_val, right_val, err := assertBinaryFloats(left, right, "not float value for LESS_EQUAL Binary node")
 				if err != nil {
 					return nil, err
 				}
 
 				return left_val <= right_val, nil
 			case LESS:
-				left_val, right_val, err := assertBinaryFloats(left, right, "not float value for MINUS Binary node")
+				left_val, right_val, err := assertBinaryFloats(left, right, "not float value for LESS Binary node")
 				if err != nil {
 					return nil, err
 				}
@@ -119,7 +120,7 @@ func EvaluateAst(node *parser.AstNode) (any, error) {
 				return left_val < right_val, nil
 
 			case GREATER_EQUAL:
-				left_val, right_val, err := assertBinaryFloats(left, right, "not float value for MINUS Binary node")
+				left_val, right_val, err := assertBinaryFloats(left, right, "not float value for GREATER EQUAL Binary node")
 				if err != nil {
 					return nil, err
 				}
@@ -127,12 +128,28 @@ func EvaluateAst(node *parser.AstNode) (any, error) {
 				return left_val >= right_val, nil
 
 			case GREATER:
-				left_val, right_val, err := assertBinaryFloats(left, right, "not float value for MINUS Binary node")
+				left_val, right_val, err := assertBinaryFloats(left, right, "not float value for GREATER Binary node")
 				if err != nil {
 					return nil, err
 				}
 
 				return left_val > right_val, nil
+
+			case EQUAL_EQUAL:
+				left_val, right_val, err := assertBinaryFloats(left, right, "not float value for EQUAL EQUAL Binary node")
+				if err != nil {
+					return nil, err
+				}
+
+				return left_val == right_val, nil
+
+			case BANG_EQUAL:
+				left_val, right_val, err := assertBinaryFloats(left, right, "not float value for EQUAL EQUAL Binary node")
+				if err != nil {
+					return nil, err
+				}
+
+				return left_val != right_val, nil
 
 			default:
 				return nil, fmt.Errorf("interpreter error: unknown Token type for Binary node")

@@ -63,7 +63,7 @@ func EvaluateAst(node *parser.AstNode) (any, error) {
 
 			switch val.Type {
 			case STAR:
-				left_val, right_val, err := assertBinaryFloat(left, right, "not float value for STAR Binary node")
+				left_val, right_val, err := assertBinaryFloats(left, right, "not float value for STAR Binary node")
 				if err != nil {
 					return nil, err
 				}
@@ -71,14 +71,14 @@ func EvaluateAst(node *parser.AstNode) (any, error) {
 				return left_val * right_val, nil
 
 			case SLASH:
-				left_val, right_val, err := assertBinaryFloat(left, right, "not float value for SLASH Binary node")
+				left_val, right_val, err := assertBinaryFloats(left, right, "not float value for SLASH Binary node")
 				if err != nil {
 					return nil, err
 				}
 
 				return left_val / right_val, nil
 			case MINUS:
-				left_val, right_val, err := assertBinaryFloat(left, right, "not float value for MINUS Binary node")
+				left_val, right_val, err := assertBinaryFloats(left, right, "not float value for MINUS Binary node")
 				if err != nil {
 					return nil, err
 				}
@@ -86,9 +86,20 @@ func EvaluateAst(node *parser.AstNode) (any, error) {
 				return left_val - right_val, nil
 
 			case PLUS:
-				left_val, right_val, err := assertBinaryFloat(left, right, "not float value for PLUS Binary node")
+				left_val, right_val, err := assertBinaryFloats(left, right, "not float value for PLUS Binary node")
 				if err != nil {
-					return nil, err
+					// check if strings
+					left_val, ok := left.(string)
+					if !ok {
+						return nil, fmt.Errorf("interpreter error: not float or string value for PLUS Binary node")
+					}
+
+					right_val, ok := right.(string)
+					if !ok {
+						return nil, fmt.Errorf("interpreter error: not float or string value for PLUS Binary node")
+					}
+
+					return fmt.Sprintf("%s%s", left_val, right_val), nil
 				}
 
 				return left_val + right_val, nil
@@ -139,7 +150,7 @@ func isTruthy(eval any) bool {
 }
 
 // Return left and right as float and return err if any of them are not float
-func assertBinaryFloat(left, right any, error_msg string) (float64, float64, error) {
+func assertBinaryFloats(left, right any, error_msg string) (float64, float64, error) {
 	left_val, ok := left.(float64)
 	if !ok {
 		return 0, 0, fmt.Errorf("interpreter error: %s", error_msg)
@@ -151,7 +162,6 @@ func assertBinaryFloat(left, right any, error_msg string) (float64, float64, err
 	}
 
 	return left_val, right_val, nil
-
 }
 
 func PrintEvaluation(result any) string {

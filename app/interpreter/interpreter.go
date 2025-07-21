@@ -63,28 +63,37 @@ func EvaluateAst(node *parser.AstNode) (any, error) {
 
 			switch val.Type {
 			case STAR:
-				left_val, ok := left.(float64)
-				if !ok {
-					return nil, fmt.Errorf("interpreter error: not float value for STAR Binary node")
-				}
-				right_val, ok := right.(float64)
-				if !ok {
-					return nil, fmt.Errorf("interpreter error: not float value for STAR Binary node")
+				left_val, right_val, err := assertBinaryFloat(left, right, "not float value for STAR Binary node")
+				if err != nil {
+					return nil, err
 				}
 
 				return left_val * right_val, nil
 
 			case SLASH:
-				left_val, ok := left.(float64)
-				if !ok {
-					return nil, fmt.Errorf("interpreter error: not float value for SLASH Binary node")
-				}
-				right_val, ok := right.(float64)
-				if !ok {
-					return nil, fmt.Errorf("interpreter error: not float value for SLASH Binary node")
+				left_val, right_val, err := assertBinaryFloat(left, right, "not float value for SLASH Binary node")
+				if err != nil {
+					return nil, err
 				}
 
 				return left_val / right_val, nil
+			case MINUS:
+				left_val, right_val, err := assertBinaryFloat(left, right, "not float value for MINUS Binary node")
+				if err != nil {
+					return nil, err
+				}
+
+				return left_val - right_val, nil
+
+			case PLUS:
+				left_val, right_val, err := assertBinaryFloat(left, right, "not float value for PLUS Binary node")
+				if err != nil {
+					return nil, err
+				}
+
+				return left_val + right_val, nil
+			default:
+				return nil, fmt.Errorf("interpreter error: unknown Token type for Binary node")
 			}
 		}
 		return nil, fmt.Errorf("interpreter error: not Token for Binary node")
@@ -127,6 +136,22 @@ func isTruthy(eval any) bool {
 	}
 	// lox returns true if not nil nor false for everything else
 	return true
+}
+
+// Return left and right as float and return err if any of them are not float
+func assertBinaryFloat(left, right any, error_msg string) (float64, float64, error) {
+	left_val, ok := left.(float64)
+	if !ok {
+		return 0, 0, fmt.Errorf("interpreter error: %s", error_msg)
+	}
+
+	right_val, ok := right.(float64)
+	if !ok {
+		return 0, 0, fmt.Errorf("interpreter error: %s", error_msg)
+	}
+
+	return left_val, right_val, nil
+
 }
 
 func PrintEvaluation(result any) string {

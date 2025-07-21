@@ -122,7 +122,7 @@ func scanToken() {
 		} else if isAlpha(char) {
 			scanIdentifier()
 		} else {
-			loxerrors.Scanner_error(
+			loxerrors.ScannerError(
 				scan_state.line,
 				fmt.Sprintf("Unexpected character: %s", string(char)),
 			)
@@ -188,7 +188,7 @@ func isAlphaNumeric(char rune) bool {
 func scanStringLiteral() {
 	for {
 		if isAtEnd() {
-			loxerrors.Scanner_error(scan_state.line, "Unterminated string.")
+			loxerrors.ScannerError(scan_state.line, "Unterminated string.")
 			return
 		} else if peek() == '"' {
 			advance()
@@ -217,7 +217,7 @@ func scanNumberLiteral() {
 
 	num, err := strconv.ParseFloat(source[scan_state.start:scan_state.current], 64)
 	if err != nil {
-		loxerrors.Scanner_error(scan_state.line, err.Error())
+		loxerrors.ScannerError(scan_state.line, err.Error())
 	}
 
 	addTokenWithLiteral(NUMBER, num)

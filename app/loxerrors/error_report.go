@@ -10,7 +10,8 @@ import (
 )
 
 type Singleton struct {
-	had_error bool
+	had_error         bool
+	had_runtime_error bool
 }
 
 var instance *Singleton
@@ -18,13 +19,27 @@ var once sync.Once
 
 func GetErrorState() *bool {
 	once.Do(func() {
-		instance = &Singleton{had_error: false}
+		instance = &Singleton{
+			had_error:         false,
+			had_runtime_error: false,
+		}
 	})
 
 	return &instance.had_error
 }
 
-func Scanner_error(line int, message string) {
+func GetRuntimeErrorState() *bool {
+	once.Do(func() {
+		instance = &Singleton{
+			had_error:         false,
+			had_runtime_error: false,
+		}
+	})
+
+	return &instance.had_runtime_error
+}
+
+func ScannerError(line int, message string) {
 	report(line, "", message)
 }
 
@@ -33,10 +48,15 @@ func report(line int, where string, message string) {
 	instance.had_error = true
 }
 
-func Parser_error(token Token, message string) {
+func ParserError(token Token, message string) {
 	if token.Type == EOF {
 		report(token.Line, " at end", message)
 	} else {
 		report(token.Line, " at '"+token.Lexeme+"'", message)
 	}
+}
+
+func RuntimeError(token Token, message string) {
+	fmt.Fprintf(os.Stderr, "%s\n[line %d]\n", message, token.Line)
+	instance.had_runtime_error = true
 }

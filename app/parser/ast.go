@@ -235,7 +235,7 @@ func primary() (*AstNode, error) {
 		return expr, err
 	}
 
-	loxerrors.Parser_error(peek(), "Expect expression.")
+	loxerrors.ParserError(peek(), "Expect expression.")
 	return nil, errors.New(`Unidentified token: ` + peek().Lexeme)
 
 }

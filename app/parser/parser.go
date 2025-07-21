@@ -50,7 +50,7 @@ func consume(token_type TokenType, message string) (Token, error) {
 		return advance(), nil
 	}
 
-	loxerrors.Parser_error(peek(), message)
+	loxerrors.ParserError(peek(), message)
 	return Token{}, fmt.Errorf("parser error: %s", message)
 
 }

@@ -76,10 +76,16 @@ func run(command, source string) {
 		fmt.Println(parser.AstPrinter(ast))
 	}
 
-	eval, _ := interpreter.EvaluateAst(ast)
+	eval, err := interpreter.EvaluateAst(ast)
 
-	if *had_error {
-		os.Exit(65)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "unexpected error: %s\n", err)
+	}
+
+	had_runtime_error := loxerrors.GetRuntimeErrorState()
+
+	if *had_runtime_error {
+		os.Exit(70)
 	}
 
 	if command == "evaluate" {

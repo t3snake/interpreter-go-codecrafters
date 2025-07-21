@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/codecrafters-io/interpreter-starter-go/app/loxerrors"
 	"github.com/codecrafters-io/interpreter-starter-go/app/parser"
 
 	//lint:ignore ST1001 I dont care
@@ -38,6 +39,7 @@ func EvaluateAst(node *parser.AstNode) (any, error) {
 			if val, ok := child.(float64); ok {
 				return -val, nil
 			}
+			loxerrors.RuntimeError(val, "Operand must be a number.")
 			return nil, fmt.Errorf("interpreter error: not float value after MINUS unary node")
 
 		case BANG:
@@ -65,6 +67,7 @@ func EvaluateAst(node *parser.AstNode) (any, error) {
 			case STAR:
 				left_val, right_val, err := assertBinaryFloats(left, right, "not float value for STAR Binary node")
 				if err != nil {
+					loxerrors.RuntimeError(val, "Operands must be a number.")
 					return nil, err
 				}
 
@@ -73,6 +76,7 @@ func EvaluateAst(node *parser.AstNode) (any, error) {
 			case SLASH:
 				left_val, right_val, err := assertBinaryFloats(left, right, "not float value for SLASH Binary node")
 				if err != nil {
+					loxerrors.RuntimeError(val, "Operands must be a number.")
 					return nil, err
 				}
 
@@ -80,6 +84,7 @@ func EvaluateAst(node *parser.AstNode) (any, error) {
 			case MINUS:
 				left_val, right_val, err := assertBinaryFloats(left, right, "not float value for MINUS Binary node")
 				if err != nil {
+					loxerrors.RuntimeError(val, "Operands must be a number.")
 					return nil, err
 				}
 
@@ -91,11 +96,13 @@ func EvaluateAst(node *parser.AstNode) (any, error) {
 					// check if strings
 					left_val, ok := left.(string)
 					if !ok {
+						loxerrors.RuntimeError(val, "Operands must be two numbers or two strings.")
 						return nil, fmt.Errorf("interpreter error: not float or string value for PLUS Binary node")
 					}
 
 					right_val, ok := right.(string)
 					if !ok {
+						loxerrors.RuntimeError(val, "Operands must be two numbers or two strings.")
 						return nil, fmt.Errorf("interpreter error: not float or string value for PLUS Binary node")
 					}
 
@@ -107,6 +114,7 @@ func EvaluateAst(node *parser.AstNode) (any, error) {
 			case LESS_EQUAL:
 				left_val, right_val, err := assertBinaryFloats(left, right, "not float value for LESS_EQUAL Binary node")
 				if err != nil {
+					loxerrors.RuntimeError(val, "Operands must be a number.")
 					return nil, err
 				}
 
@@ -114,6 +122,7 @@ func EvaluateAst(node *parser.AstNode) (any, error) {
 			case LESS:
 				left_val, right_val, err := assertBinaryFloats(left, right, "not float value for LESS Binary node")
 				if err != nil {
+					loxerrors.RuntimeError(val, "Operands must be a number.")
 					return nil, err
 				}
 
@@ -122,6 +131,7 @@ func EvaluateAst(node *parser.AstNode) (any, error) {
 			case GREATER_EQUAL:
 				left_val, right_val, err := assertBinaryFloats(left, right, "not float value for GREATER EQUAL Binary node")
 				if err != nil {
+					loxerrors.RuntimeError(val, "Operands must be a number.")
 					return nil, err
 				}
 
@@ -130,6 +140,7 @@ func EvaluateAst(node *parser.AstNode) (any, error) {
 			case GREATER:
 				left_val, right_val, err := assertBinaryFloats(left, right, "not float value for GREATER Binary node")
 				if err != nil {
+					loxerrors.RuntimeError(val, "Operand must be a number.")
 					return nil, err
 				}
 

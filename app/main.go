@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/codecrafters-io/interpreter-starter-go/app/interpreter"
 	"github.com/codecrafters-io/interpreter-starter-go/app/loxerrors"
 	"github.com/codecrafters-io/interpreter-starter-go/app/parser"
 	"github.com/codecrafters-io/interpreter-starter-go/app/scanner"
@@ -21,7 +22,7 @@ func main() {
 
 	command := os.Args[1]
 
-	valid_commands := []string{"tokenize", "parse"}
+	valid_commands := []string{"tokenize", "parse", "evaluate"}
 
 	is_command_valid := false
 	for _, valid_command := range valid_commands {
@@ -73,5 +74,15 @@ func run(command, source string) {
 
 	if command == "parse" {
 		fmt.Println(parser.AstPrinter(ast))
+	}
+
+	eval, _ := interpreter.EvaluateAst(ast)
+
+	if *had_error {
+		os.Exit(65)
+	}
+
+	if command == "evaluate" {
+		fmt.Println(interpreter.PrintEvaluation(eval))
 	}
 }

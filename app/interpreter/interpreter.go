@@ -13,6 +13,11 @@ import (
 func EvaluateAst(node *parser.AstNode) (any, error) {
 	// TODO typecheck here? but any return type
 	switch node.Type {
+	case parser.GROUP:
+		if len(node.Children) == 0 {
+			return nil, fmt.Errorf("interpreter error no children for group node")
+		}
+		return EvaluateAst(node.Children[0])
 	case parser.NUMBERNODE:
 		return node.Representation, nil
 	case parser.STRINGNODE:

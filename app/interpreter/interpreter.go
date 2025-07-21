@@ -28,7 +28,7 @@ func EvaluateAst(node *parser.AstNode) (any, error) {
 		if len(node.Children) != 1 {
 			return nil, fmt.Errorf("interpreter error no children for group node")
 		}
-		child, err := EvaluateAst(node.Children[1])
+		child, err := EvaluateAst(node.Children[0])
 		if err != nil {
 			return nil, err
 		}
@@ -41,14 +41,7 @@ func EvaluateAst(node *parser.AstNode) (any, error) {
 			return nil, fmt.Errorf("interpreter error not float value after MINUS unary node")
 
 		case BANG:
-			if child == nil {
-				return true, nil
-			}
-			if val, ok := child.(bool); ok {
-				return !val, nil
-			}
-
-			return nil, fmt.Errorf("interpreter error unknown value after BANG unary node")
+			return !isTruthy(child), nil
 
 		default:
 			return nil, fmt.Errorf("interpreter error unknown operator for Unary node")
@@ -81,6 +74,18 @@ func EvaluateAst(node *parser.AstNode) (any, error) {
 		return nil, fmt.Errorf("unexpected or not implemented yet")
 	}
 
+}
+
+// Return if evaluation is truthy
+func isTruthy(eval any) bool {
+	if eval == nil {
+		return true
+	}
+	if val, ok := eval.(bool); ok {
+		return val
+	}
+	// lox returns true if not nil nor false for everything else
+	return true
 }
 
 func PrintEvaluation(result any) string {

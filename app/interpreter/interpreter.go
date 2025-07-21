@@ -79,7 +79,7 @@ func EvaluateAst(node *parser.AstNode) (any, error) {
 // Return if evaluation is truthy
 func isTruthy(eval any) bool {
 	if eval == nil {
-		return true
+		return false
 	}
 	if val, ok := eval.(bool); ok {
 		return val

@@ -15,18 +15,18 @@ func EvaluateAst(node *parser.AstNode) (any, error) {
 	switch node.Type {
 	case parser.GROUP:
 		if len(node.Children) != 1 {
-			return nil, fmt.Errorf("interpreter error no children for group node")
+			return nil, fmt.Errorf("interpreter error: no children for group node")
 		}
 		return EvaluateAst(node.Children[0])
 
 	case parser.UNARY:
 		val, ok := node.Representation.(Token)
 		if !ok {
-			return nil, fmt.Errorf("interpreter expected Token for Unary node but got %s", node.Representation)
+			return nil, fmt.Errorf("interpreter error: expected Token for Unary node but got %s", node.Representation)
 		}
 
 		if len(node.Children) != 1 {
-			return nil, fmt.Errorf("interpreter error no children for group node")
+			return nil, fmt.Errorf("interpreter error: Unary node doesnt have 1 child")
 		}
 		child, err := EvaluateAst(node.Children[0])
 		if err != nil {
@@ -38,14 +38,56 @@ func EvaluateAst(node *parser.AstNode) (any, error) {
 			if val, ok := child.(float64); ok {
 				return -val, nil
 			}
-			return nil, fmt.Errorf("interpreter error not float value after MINUS unary node")
+			return nil, fmt.Errorf("interpreter error: not float value after MINUS unary node")
 
 		case BANG:
 			return !isTruthy(child), nil
 
 		default:
-			return nil, fmt.Errorf("interpreter error unknown operator for Unary node")
+			return nil, fmt.Errorf("interpreter error: unknown operator for Unary node")
 		}
+
+	case parser.BINARY:
+		if val, ok := node.Representation.(Token); ok {
+			if len(node.Children) != 2 {
+				return nil, fmt.Errorf("interpreter error: Binary node doesnt have 2 children")
+			}
+			left, err := EvaluateAst(node.Children[0])
+			if err != nil {
+				return nil, err
+			}
+			right, err := EvaluateAst(node.Children[1])
+			if err != nil {
+				return nil, err
+			}
+
+			switch val.Type {
+			case STAR:
+				left_val, ok := left.(float64)
+				if !ok {
+					return nil, fmt.Errorf("interpreter error: not float value for STAR Binary node")
+				}
+				right_val, ok := right.(float64)
+				if !ok {
+					return nil, fmt.Errorf("interpreter error: not float value for STAR Binary node")
+				}
+
+				return left_val * right_val, nil
+
+			case SLASH:
+				left_val, ok := left.(float64)
+				if !ok {
+					return nil, fmt.Errorf("interpreter error: not float value for SLASH Binary node")
+				}
+				right_val, ok := right.(float64)
+				if !ok {
+					return nil, fmt.Errorf("interpreter error: not float value for SLASH Binary node")
+				}
+
+				return left_val / right_val, nil
+			}
+		}
+		return nil, fmt.Errorf("interpreter error: not Token for Binary node")
 
 	case parser.NUMBERNODE:
 		return node.Representation, nil
@@ -56,7 +98,7 @@ func EvaluateAst(node *parser.AstNode) (any, error) {
 	case parser.TERMINAL:
 		val, ok := node.Representation.(Token)
 		if !ok {
-			return nil, fmt.Errorf("interpreter expected Token for Terminal but got %s", node.Representation)
+			return nil, fmt.Errorf("interpreter error: expected Token for Terminal but got %s", node.Representation)
 		}
 		switch val.Type {
 		case TRUE:
@@ -66,12 +108,11 @@ func EvaluateAst(node *parser.AstNode) (any, error) {
 		case NIL:
 			return nil, nil
 		default:
-			return nil, fmt.Errorf("unexpected Token Type for Terminal AST node %s", val.Type)
+			return nil, fmt.Errorf("interpreter error: unexpected Token Type for Terminal AST node %s", val.Type)
 		}
 
 	default:
-		// TODO do other node cases
-		return nil, fmt.Errorf("unexpected or not implemented yet")
+		return nil, fmt.Errorf("interpreter error: unexpected Ast Node Type")
 	}
 
 }

@@ -136,20 +136,10 @@ func EvaluateAst(node *parser.AstNode) (any, error) {
 				return left_val > right_val, nil
 
 			case EQUAL_EQUAL:
-				left_val, right_val, err := assertBinaryFloats(left, right, "not float value for EQUAL EQUAL Binary node")
-				if err != nil {
-					return nil, err
-				}
-
-				return left_val == right_val, nil
+				return isEqualLoxExpr(left, right), nil
 
 			case BANG_EQUAL:
-				left_val, right_val, err := assertBinaryFloats(left, right, "not float value for EQUAL EQUAL Binary node")
-				if err != nil {
-					return nil, err
-				}
-
-				return left_val != right_val, nil
+				return !isEqualLoxExpr(left, right), nil
 
 			default:
 				return nil, fmt.Errorf("interpreter error: unknown Token type for Binary node")
@@ -195,6 +185,15 @@ func isTruthy(eval any) bool {
 	}
 	// lox returns true if not nil nor false for everything else
 	return true
+}
+
+func isEqualLoxExpr(eval_a, eval_b any) bool {
+	if eval_a == nil && eval_b == nil {
+		return true
+	}
+
+	return eval_a == eval_b
+
 }
 
 // Return left and right as float and return err if any of them are not float

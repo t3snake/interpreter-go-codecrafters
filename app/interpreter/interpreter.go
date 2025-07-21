@@ -45,7 +45,7 @@ func EvaluateAst(node *parser.AstNode) (any, error) {
 				return true, nil
 			}
 			if val, ok := child.(bool); ok {
-				return val, nil
+				return !val, nil
 			}
 
 			return nil, fmt.Errorf("interpreter error unknown value after BANG unary node")

@@ -74,6 +74,8 @@ func run(command, source string) {
 
 	if command == "parse" {
 		fmt.Println(parser.AstPrinter(ast))
+
+		return // return here for parse command
 	}
 
 	eval, err := interpreter.EvaluateAst(ast)
